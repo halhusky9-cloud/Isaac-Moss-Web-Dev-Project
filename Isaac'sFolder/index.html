@@ -1,0 +1,590 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Gym Site</title>
+    <style>
+      :root {
+        --bg: #070a18;
+        --card: rgba(12, 16, 40, 0.72);
+        --text: #e8eef7;
+        --muted: #b6c3ff;
+        --blue: #2f7bff;
+        --pink: #ff4fd8;
+        --accent: var(--blue);
+        --accent2: var(--pink);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        color: var(--text);
+        background: radial-gradient(900px 520px at 18% 10%, rgba(47, 123, 255, 0.34), transparent 58%),
+          radial-gradient(900px 520px at 82% 18%, rgba(255, 79, 216, 0.22), transparent 62%),
+          radial-gradient(1100px 700px at 50% 110%, rgba(47, 123, 255, 0.18), transparent 60%),
+          linear-gradient(180deg, rgba(7, 10, 24, 0.98), rgba(7, 10, 24, 1));
+        font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji",
+          "Segoe UI Emoji";
+        line-height: 1.5;
+      }
+
+      .wrap {
+        max-width: 980px;
+        margin: 0 auto;
+        padding: 56px 20px;
+      }
+
+      header {
+        display: grid;
+        gap: 14px;
+        padding: 28px 24px;
+        border: 1px solid rgba(47, 123, 255, 0.22);
+        background: linear-gradient(180deg, rgba(12, 16, 40, 0.92), rgba(12, 16, 40, 0.62));
+        border-radius: 18px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.45);
+      }
+
+      .tabs {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 14px;
+        flex-wrap: wrap;
+      }
+
+      .tab {
+        appearance: none;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        background: rgba(255, 255, 255, 0.06);
+        color: rgba(232, 238, 247, 0.95);
+        padding: 10px 14px;
+        border-radius: 999px;
+        font-weight: 700;
+        letter-spacing: 0.02em;
+        cursor: pointer;
+        transition: transform 120ms ease, background 120ms ease, border-color 120ms ease;
+      }
+
+      .tab:hover {
+        transform: translateY(-1px);
+        border-color: rgba(47, 123, 255, 0.32);
+        background: linear-gradient(90deg, rgba(47, 123, 255, 0.16), rgba(255, 79, 216, 0.12));
+      }
+
+      .tab[aria-selected="true"] {
+        border-color: rgba(255, 255, 255, 0.18);
+        background: linear-gradient(90deg, rgba(47, 123, 255, 0.22), rgba(255, 79, 216, 0.18));
+        box-shadow: 0 12px 30px rgba(47, 123, 255, 0.16);
+      }
+
+      .panel[hidden] {
+        display: none;
+      }
+
+      .cute-box {
+        margin-top: 6px;
+        padding: 16px 16px;
+        border-radius: 16px;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        background: linear-gradient(180deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.03));
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+      }
+
+      .cute-box p {
+        color: rgba(232, 238, 247, 0.9);
+      }
+
+      h2 {
+        margin: 12px 0 6px;
+        font-size: 22px;
+        letter-spacing: -0.01em;
+      }
+
+      .workout {
+        margin-top: 14px;
+        padding: 16px 16px;
+        border-radius: 16px;
+        border: 1px solid rgba(47, 123, 255, 0.22);
+        background: linear-gradient(180deg, rgba(12, 16, 40, 0.82), rgba(12, 16, 40, 0.55));
+      }
+
+      .workout h3 {
+        margin: 14px 0 6px;
+        font-size: 14px;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: rgba(232, 238, 247, 0.9);
+      }
+
+      .workout ul {
+        margin: 0;
+        padding-left: 18px;
+        color: rgba(232, 238, 247, 0.88);
+      }
+
+      .workout li {
+        margin: 6px 0;
+        color: rgba(232, 238, 247, 0.88);
+      }
+
+      .workout .note {
+        margin-top: 12px;
+        padding: 12px 12px;
+        border-radius: 14px;
+        border: 1px dashed rgba(255, 255, 255, 0.18);
+        background: linear-gradient(90deg, rgba(47, 123, 255, 0.12), rgba(255, 79, 216, 0.1));
+        color: rgba(232, 238, 247, 0.9);
+      }
+
+      .badge {
+        width: fit-content;
+        padding: 6px 10px;
+        border-radius: 999px;
+        font-size: 12px;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: rgba(232, 238, 247, 0.95);
+        background: linear-gradient(90deg, rgba(47, 123, 255, 0.22), rgba(255, 79, 216, 0.18));
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        box-shadow: 0 10px 30px rgba(47, 123, 255, 0.18);
+      }
+
+      h1 {
+        margin: 0;
+        font-size: clamp(34px, 6vw, 56px);
+        line-height: 1.05;
+        letter-spacing: -0.02em;
+        text-transform: uppercase;
+      }
+
+      h1 span {
+        background: linear-gradient(90deg, var(--accent), var(--accent2));
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+      }
+
+      p {
+        margin: 0;
+        max-width: 70ch;
+        color: var(--muted);
+        font-size: 16px;
+      }
+
+      .art {
+        margin-top: 10px;
+        border-radius: 16px;
+        overflow: hidden;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        background: linear-gradient(135deg, rgba(47, 123, 255, 0.18), rgba(255, 79, 216, 0.12));
+      }
+
+      .art svg {
+        display: block;
+        width: 100%;
+        height: auto;
+      }
+
+      .art img {
+        display: block;
+        width: 100%;
+        height: auto;
+      }
+
+      .tableau-wrap {
+        margin-top: 14px;
+        border-radius: 16px;
+        overflow: auto;
+        border: 1px solid rgba(47, 123, 255, 0.22);
+        background: linear-gradient(180deg, rgba(12, 16, 40, 0.82), rgba(12, 16, 40, 0.55));
+      }
+
+      .video-wrap {
+        margin-top: 14px;
+        border-radius: 16px;
+        overflow: hidden;
+        border: 1px solid rgba(47, 123, 255, 0.22);
+        background: linear-gradient(180deg, rgba(12, 16, 40, 0.82), rgba(12, 16, 40, 0.55));
+      }
+
+      .video-wrap iframe {
+        display: block;
+        width: 100%;
+        aspect-ratio: 16 / 9;
+        height: auto;
+        border: 0;
+      }
+
+      .jokes-fab {
+        position: fixed;
+        right: 18px;
+        bottom: 18px;
+        z-index: 9999;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        padding: 12px 14px;
+        border-radius: 999px;
+        border: 1px solid rgba(255, 255, 255, 0.14);
+        background: linear-gradient(90deg, rgba(47, 123, 255, 0.28), rgba(255, 79, 216, 0.22));
+        color: rgba(232, 238, 247, 0.98);
+        text-decoration: none;
+        font-weight: 900;
+        letter-spacing: 0.02em;
+        box-shadow: 0 18px 40px rgba(0, 0, 0, 0.45);
+        transition: transform 120ms ease, filter 120ms ease, border-color 120ms ease;
+        backdrop-filter: blur(10px);
+      }
+
+      .jokes-fab:hover {
+        transform: translateY(-2px);
+        border-color: rgba(47, 123, 255, 0.4);
+        filter: brightness(1.08);
+      }
+
+      .jokes-fab:focus-visible {
+        outline: 3px solid rgba(47, 123, 255, 0.55);
+        outline-offset: 4px;
+      }
+
+      .jokes-fab .dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 999px;
+        background: rgba(232, 238, 247, 0.9);
+        box-shadow: 0 0 0 6px rgba(47, 123, 255, 0.18);
+        flex: 0 0 auto;
+      }
+
+      @media (max-width: 520px) {
+        .jokes-fab {
+          right: 12px;
+          bottom: 12px;
+          padding: 11px 12px;
+          font-size: 14px;
+        }
+      }
+
+      .pro-fab {
+        position: fixed;
+        right: 18px;
+        bottom: 72px;
+        z-index: 9999;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        padding: 12px 14px;
+        border-radius: 999px;
+        border: 1px solid rgba(255, 255, 255, 0.14);
+        background: rgba(12, 16, 40, 0.78);
+        color: rgba(232, 238, 247, 0.98);
+        text-decoration: none;
+        font-weight: 900;
+        letter-spacing: 0.02em;
+        box-shadow: 0 18px 40px rgba(0, 0, 0, 0.45);
+        transition: transform 120ms ease, filter 120ms ease, border-color 120ms ease;
+        backdrop-filter: blur(10px);
+      }
+
+      .pro-fab:hover {
+        transform: translateY(-2px);
+        border-color: rgba(47, 123, 255, 0.35);
+        filter: brightness(1.08);
+      }
+
+      .pro-fab:focus-visible {
+        outline: 3px solid rgba(47, 123, 255, 0.55);
+        outline-offset: 4px;
+      }
+
+      .pro-fab .dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 999px;
+        background: rgba(47, 123, 255, 0.95);
+        box-shadow: 0 0 0 6px rgba(255, 79, 216, 0.14);
+        flex: 0 0 auto;
+      }
+
+      @media (max-width: 520px) {
+        .pro-fab {
+          right: 12px;
+          bottom: 64px;
+          padding: 11px 12px;
+          font-size: 14px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <a class="pro-fab" href="startbootstrap-resume-gh-pages/Resume.html" aria-label="Open Professional Page">
+      <span class="dot" aria-hidden="true"></span>
+      Professional Page
+    </a>
+    <a class="jokes-fab" href="jokes.html" aria-label="Go to Gym Jokes">
+      <span class="dot" aria-hidden="true"></span>
+      Click here to go to Gym Jokes
+    </a>
+    <main class="wrap">
+      <nav class="tabs" aria-label="Site tabs">
+        <button class="tab" type="button" data-tab="home" aria-selected="true">Home</button>
+        <button class="tab" type="button" data-tab="exercises" aria-selected="false">Gym Exercises</button>
+        <button class="tab" type="button" data-tab="report" aria-selected="false">Gym Report Table</button>
+        <button class="tab" type="button" data-tab="abs" aria-selected="false">Shredded Abs</button>
+        <button class="tab" type="button" data-tab="style" aria-selected="false">Style Sheet</button>
+      </nav>
+
+      <section class="panel" data-panel="home">
+        <header>
+          <div class="badge">Gym Site</div>
+          <h1><span>Gym Site</span></h1>
+          <p>
+            Built for strength, discipline, and results. This is where excuses end and work begins. Train hard, stay
+            consistent, and become stronger every day.
+          </p>
+          <figure class="art">
+            <img src="hero.png" alt="Two gym bros flexing" />
+          </figure>
+        </header>
+      </section>
+
+      <section class="panel" data-panel="exercises" hidden>
+        <header>
+          <div class="badge">Gym Exercises</div>
+          <h1><span>Gym Exercises</span></h1>
+          <div class="cute-box">
+            <p>
+              Built for strength, discipline, and results. This is where excuses end and work begins. Train hard, stay
+              consistent, and become stronger every day.
+            </p>
+          </div>
+          <section class="workout" aria-label="Chest Day Workout">
+            <h2>Chest Day Workout</h2>
+
+            <h3>Warm-up</h3>
+            <ul>
+              <li>5–10 minutes light cardio</li>
+              <li>2–3 light sets of bench press</li>
+            </ul>
+
+            <h3>Main lifts</h3>
+            <ul>
+              <li>Flat Barbell Bench Press – 4 sets of 5–8 reps</li>
+              <li>Incline Dumbbell Press – 3 sets of 8–10 reps</li>
+            </ul>
+
+            <h3>Accessory work</h3>
+            <ul>
+              <li>Dumbbell Flys – 3 sets of 10–12 reps</li>
+              <li>Chest Dips (lean forward) – 3 sets to failure</li>
+            </ul>
+
+            <h3>Finisher</h3>
+            <ul>
+              <li>Cable Crossovers – 3 sets of 12–15 reps</li>
+              <li>Push-ups – 2 sets to failure</li>
+            </ul>
+
+            <div class="note">
+              <strong>Rest time:</strong> 60–90 seconds between sets (longer for heavy bench sets)<br />
+              <strong>Focus:</strong> Controlled movement, full range of motion, squeeze chest at the top of every rep
+            </div>
+          </section>
+          <section class="workout" aria-label="Leg Day Workout">
+            <h2>Leg Day Workout</h2>
+
+            <h3>Warm-up</h3>
+            <ul>
+              <li>5–10 minutes light cardio (bike, treadmill, or incline walk)</li>
+              <li>Bodyweight squats + lunges to activate legs</li>
+            </ul>
+
+            <h3>Main lifts</h3>
+            <ul>
+              <li>Barbell Back Squat – 4 sets of 5–8 reps</li>
+              <li>Romanian Deadlift – 3 sets of 6–10 reps</li>
+            </ul>
+
+            <h3>Quad focus</h3>
+            <ul>
+              <li>Leg Press – 3 sets of 10–12 reps</li>
+              <li>Walking Lunges – 3 sets of 10–12 steps each leg</li>
+            </ul>
+
+            <h3>Hamstrings &amp; glutes</h3>
+            <ul>
+              <li>Lying or Seated Leg Curl – 3 sets of 10–12 reps</li>
+              <li>Hip Thrusts – 3 sets of 8–12 reps</li>
+            </ul>
+
+            <h3>Calves</h3>
+            <ul>
+              <li>Standing Calf Raises – 4 sets of 12–15 reps</li>
+              <li>Seated Calf Raises – 3 sets of 12–15 reps</li>
+            </ul>
+
+            <h3>Finisher (optional)</h3>
+            <ul>
+              <li>Bodyweight squats – 2 sets to failure</li>
+            </ul>
+
+            <div class="note">
+              <strong>Rest time:</strong> 60–90 seconds between sets (2–3 min for heavy squats)<br />
+              <strong>Focus:</strong> Deep range of motion, controlled tempo, drive through heels and stay consistent with
+              form
+            </div>
+          </section>
+        </header>
+      </section>
+
+      <section class="panel" data-panel="report" hidden>
+        <header>
+          <div class="badge">Gym Report</div>
+          <h1><span>Gym Report Table</span></h1>
+          <div class="tableau-wrap" aria-label="Gym report table">
+            <div class="tableauPlaceholder" id="viz1776374319915" style="position: relative">
+              <noscript>
+                <a href="#"
+                  ><img
+                    alt="Gym Report "
+                    src="https://public.tableau.com/static/images/Gy/GymReport/Dashboard1/1_rss.png"
+                    style="border: none"
+                /></a>
+              </noscript>
+              <object class="tableauViz" style="display: none">
+                <param name="host_url" value="https%3A%2F%2Fpublic.tableau.com%2F" />
+                <param name="embed_code_version" value="3" />
+                <param name="site_root" value="" />
+                <param name="name" value="GymReport/Dashboard1" />
+                <param name="tabs" value="no" />
+                <param name="toolbar" value="yes" />
+                <param name="static_image" value="https://public.tableau.com/static/images/Gy/GymReport/Dashboard1/1.png" />
+                <param name="animate_transition" value="yes" />
+                <param name="display_static_image" value="yes" />
+                <param name="display_spinner" value="yes" />
+                <param name="display_overlay" value="yes" />
+                <param name="display_count" value="yes" />
+                <param name="language" value="en-US" />
+              </object>
+            </div>
+            <script type="text/javascript">
+              var divElement = document.getElementById("viz1776374319915");
+              var vizElement = divElement.getElementsByTagName("object")[0];
+              if (divElement.offsetWidth > 800) {
+                vizElement.style.width = "1150px";
+                vizElement.style.height = "727px";
+              } else if (divElement.offsetWidth > 500) {
+                vizElement.style.width = "1150px";
+                vizElement.style.height = "727px";
+              } else {
+                vizElement.style.width = "100%";
+                vizElement.style.height = "3027px";
+              }
+              var scriptElement = document.createElement("script");
+              scriptElement.src = "https://public.tableau.com/javascripts/api/viz_v1.js";
+              vizElement.parentNode.insertBefore(scriptElement, vizElement);
+            </script>
+          </div>
+        </header>
+      </section>
+
+      <section class="panel" data-panel="abs" hidden>
+        <header>
+          <div class="badge">Abs</div>
+          <h1><span>Shredded Abs</span></h1>
+          <div class="video-wrap" aria-label="Shredded abs video">
+            <iframe
+              src="https://www.youtube.com/embed/Ta8_ASDu9yk?si=tDPAkp1iRk6PGLS1"
+              title="YouTube video player"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              referrerpolicy="strict-origin-when-cross-origin"
+              allowfullscreen
+            ></iframe>
+          </div>
+        </header>
+      </section>
+
+      <section class="panel" data-panel="style" hidden>
+        <header>
+          <div class="badge">Design</div>
+          <h1><span>Style Sheet</span></h1>
+
+          <section class="workout" aria-label="Layout Blocks">
+            <h2>1. The Layout Blocks (Three New Divs)</h2>
+            <p>
+              Instead of everything flowing in one long line, we will use three specific containers to group your
+              information:
+            </p>
+            <ul>
+              <li>
+                <strong>The Navigation Sidebar:</strong> A vertical or top-aligned box that holds your menu buttons,
+                keeping them separate from the workout details.
+              </li>
+              <li>
+                <strong>The Main Content Stage:</strong> A large, centered “glass” container that holds the specific
+                workout text or reports you are viewing.
+              </li>
+              <li>
+                <strong>The Focus Callout:</strong> A specialized box at the bottom of the page designed to highlight the
+                “Note” and “Rest Time” sections.
+              </li>
+            </ul>
+          </section>
+
+          <section class="workout" aria-label="Custom Stylesheet Design">
+            <h2>2. The Custom Stylesheet Design</h2>
+            <p>Your scratch-built stylesheet will define the look of the site through these four key rules:</p>
+
+            <h3>Font family</h3>
+            <p>
+              The site will use a modern sans-serif system font. This removes the “old web” look and makes the text look
+              like a professional fitness app—sharp, clean, and easy to read while moving.
+            </p>
+
+            <h3>Font color</h3>
+            <p>
+              We will use a high-contrast palette. The background will be a dark ink color, while the main text will be a
+              soft ghost white. This ensures you can read your reps and sets even in a bright gym environment.
+            </p>
+
+            <h3>Header styling</h3>
+            <p>
+              All main titles will be styled in bold uppercase with a blue gradient. This makes the name of the workout
+              (like “CHEST DAY”) stand out as the most important piece of information on the screen.
+            </p>
+
+            <h3>Container borders</h3>
+            <p>
+              The containers will use glow borders. Instead of plain black lines, the edges of your content boxes will
+              have a thin, translucent blue glow to give the site a high-tech, “cyber-gym” feel.
+            </p>
+          </section>
+
+          <section class="workout" aria-label="Visual Summary">
+            <h2>3. Visual Summary</h2>
+            <p>
+              The final result will look like a structured dashboard. The Sidebar handles the navigation, the Main Stage
+              displays your exercises in clean white text, and the Focus Callout uses a bright accent color to make sure
+              you don't forget to rest between sets.
+            </p>
+          </section>
+        </header>
+      </section>
+    </main>
+    <script>
+      const tabs = Array.from(document.querySelectorAll(".tab"));
+      const panels = new Map(Array.from(document.querySelectorAll("[data-panel]")).map((p) => [p.dataset.panel, p]));
+
+      function setTab(next) {
+        for (const tab of tabs) tab.setAttribute("aria-selected", String(tab.dataset.tab === next));
+        for (const [key, panel] of panels) panel.hidden = key !== next;
+      }
+
+      for (const tab of tabs) tab.addEventListener("click", () => setTab(tab.dataset.tab));
+    </script>
+  </body>
+</html>
